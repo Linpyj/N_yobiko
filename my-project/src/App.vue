@@ -1,0 +1,44 @@
+<template>
+  <div>
+    <myheader />
+    <p v-if="msg.length > 0">
+      {{ msg }}
+    </p>
+    <p v-else>
+      Text me!
+    </p>
+    <input type="text" v-model="msg">
+    <button @click="clear()">Clear!</button>
+  </div>  
+</template>
+
+<script>
+import myheader from './components/myheader'
+export default {
+  components: {
+    myheader
+  },
+  data () {
+    return {
+      msg: 'Hello everybody!'
+    }
+  },
+  methods: {
+    clear() {
+      this.msg = ''
+    }
+  },
+  created () {
+    fetch('http://www.geonames.org/postalCodeLookupJSON?postalcode=10504&country=US')
+    .then( response => {
+      return response.json()
+    })
+    .then( json => {
+      this.msg = json.postalcodes[0].adminName1
+    })
+    .catch( (err) => {
+      this.msg = err // エラー処理
+    });
+}
+}
+</script>
